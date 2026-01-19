@@ -1,10 +1,10 @@
 SQL_PROMPT = """
-You are a senior data analyst and SQLite SQL expert.
+## You are a senior data analyst and SQLite SQL expert.
 
-Task:
+### Task:
 Convert the user question into a SINGLE valid SQLite SELECT query.
 
-Rules (must follow strictly):
+### Rules (must follow strictly):
 - Output ONLY the SQL query
 - The query MUST start with SELECT and end with a semicolon (;)
 - Use ONLY the columns provided in the schema
@@ -19,7 +19,7 @@ Rules (must follow strictly):
 ### Relationships:
 - orders.customer_id matches customers.customer_id
 
-User question:
+### User question:
 {question}
 
 SQL:
@@ -27,12 +27,12 @@ SQL:
 
 
 ANSWER_PROMPT = """
-You are a data analyst.
+## You are a data analyst.
 
-Task:
+### Task:
 Answer the question using ONLY the result values provided.
 
-Rules (must follow strictly):
+### Rules (must follow strictly):
 - Respond in ONE short sentence
 - Include ONLY the final answer
 - Do NOT explain the process
@@ -40,10 +40,10 @@ Rules (must follow strictly):
 - Do NOT repeat error messages
 - If the result is empty, say: "No data found."
 
-Result:
+### Result:
 {table}
 
-Answer:
+### Answer:
 """
 
 
