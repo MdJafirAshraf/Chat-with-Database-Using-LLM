@@ -1,83 +1,63 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
-from llama_cpp import Llama
-import sqlite3
-import pandas as pd
 import re
+from fastapi import FastAPI
+from llama_cpp import Llama
+from pydantic import BaseModel
+from app.prompts import SQL_PROMPT, ANSWER_PROMPT
+from app.database import execute_sql, is_safe_sql
 
-# ------------------ CONFIG ------------------
-DB_PATH = "data.db"
-MODEL_PATH = "models/qwen2.5-1.5b-instruct-q4_k_m.gguf"
+app = FastAPI(title="Chat with Local Database AI")
+
+MODEL_PATH = "app\models\qwen2.5-1.5b-instruct-q4_k_m.gguf"
 
 llm = Llama(
     model_path=MODEL_PATH,
     n_ctx=4096,
-    n_threads=8
+    n_threads=4,
+    verbose=False
 )
 
-app = FastAPI(title="Chat with Database (Local AI)")
 
-# ------------------ REQUEST ------------------
-class QueryRequest(BaseModel):
+class ChatRequest(BaseModel):
     question: str
 
-# ------------------ SQL SAFETY ------------------
-def is_safe_sql(sql: str) -> bool:
-    forbidden = ["delete", "drop", "update", "insert", "alter"]
-    return not any(word in sql.lower() for word in forbidden)
 
-# ------------------ NL → SQL ------------------
-def generate_sql(question: str) -> str:
-    prompt = f"""
-You are an expert SQLite SQL generator.
-Generate ONLY a SELECT query.
-Do NOT explain anything.
+@app.post("/chat")
+def chat(request: ChatRequest):
+    return handle_question(request.question)
 
-Table: sales(id, product, quantity, price, date)
 
-User question:
-{question}
+def run_llm(prompt: str, max_tokens: int = 256) -> str:
+    output = llm(prompt, max_tokens=max_tokens)
+    return output["choices"][0]["text"].strip()
 
-SQL:
-"""
-    output = llm(prompt, max_tokens=200)
-    sql = output["choices"][0]["text"].strip()
+
+def question_to_sql(question: str) -> str:
+    prompt = SQL_PROMPT.format(question=question)
+    sql = run_llm(prompt)
     sql = re.sub(r"```sql|```", "", sql).strip()
     return sql
 
-# ------------------ RUN SQL ------------------
-def run_query(sql: str) -> pd.DataFrame:
-    conn = sqlite3.connect(DB_PATH)
-    df = pd.read_sql_query(sql, conn)
-    conn.close()
-    return df
 
-# ------------------ RESULT → TEXT ------------------
-def explain_result(df: pd.DataFrame) -> str:
+def dataframe_to_text(df):
     if df.empty:
         return "No data found for your query."
 
-    prompt = f"""
-Explain this data in simple business language:
+    prompt = ANSWER_PROMPT.format(table=df.to_string(index=False))
+    return run_llm(prompt)
 
-{df.to_string(index=False)}
-"""
-    output = llm(prompt, max_tokens=200)
-    return output["choices"][0]["text"].strip()
 
-# ------------------ API ------------------
-@app.post("/chat")
-def chat(request: QueryRequest):
-    sql = generate_sql(request.question)
+def handle_question(question: str):
+    sql = question_to_sql(question)
 
     if not is_safe_sql(sql):
         return {"error": "Unsafe SQL detected"}
 
-    df = run_query(sql)
-    answer = explain_result(df)
+    df = execute_sql(sql)
+    answer = dataframe_to_text(df)
 
     return {
-        "question": request.question,
+        "question": question,
         "sql": sql,
         "answer": answer
     }
+
