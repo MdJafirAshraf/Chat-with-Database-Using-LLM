@@ -11,8 +11,9 @@ MODEL_PATH = "app\models\qwen2.5-1.5b-instruct-q4_k_m.gguf"
 
 llm = Llama(
     model_path=MODEL_PATH,
-    n_ctx=4096,
+    n_ctx=2048,
     n_threads=4,
+    max_tokens = 64,
     verbose=False
 )
 
