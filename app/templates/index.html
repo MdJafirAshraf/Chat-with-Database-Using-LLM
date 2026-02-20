@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Database AI</title>
+    <link rel="stylesheet" href="static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🗄️ Chat with Database AI</h1>
+            <p class="subtitle">Ask questions about your data in plain English</p>
+        </header>
+
+        <div class="chat-container">
+            <div id="chat-messages" class="chat-messages">
+                <div class="message bot-message">
+                    <div class="message-content">
+                        <p>👋 Hello! I'm your database assistant. You can ask me questions like:</p>
+                        <ul>
+                            <li>"How many orders do we have?"</li>
+                            <li>"What are the top 5 products by sales?"</li>
+                            <li>"Show me customers from São Paulo"</li>
+                        </ul>
+                        <p>Try it out!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <textarea 
+                        id="question-input" 
+                        placeholder="Ask a question about your data..."
+                        rows="1"
+                    ></textarea>
+                    <button id="send-btn" class="send-btn">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="22" y1="2" x2="11" y2="13"></line>
+                            <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div id="result-panel" class="result-panel hidden">
+            <div class="result-header">
+                <h2>Query Results</h2>
+                <button id="close-result" class="close-btn">&times;</button>
+            </div>
+            <div class="result-content">
+                <div class="result-section">
+                    <h3>📝 Generated SQL</h3>
+                    <pre id="sql-code" class="code-block">-- SQL will appear here</pre>
+                </div>
+                <div class="result-section">
+                    <h3>💬 Answer</h3>
+                    <p id="answer-text" class="answer-text">-- Answer will appear here</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="loading-overlay" class="loading-overlay hidden">
+            <div class="loading-spinner"></div>
+            <p id="loading-text">Processing your question...</p>
+        </div>
+
+        <div id="error-toast" class="error-toast hidden">
+            <span id="error-message"></span>
+            <button id="close-error" class="close-error">&times;</button>
+        </div>
+    </div>
+
+    <script src="static/js/jquery.min.js"></script>
+    <script src="static/js/app.js"></script>
+</body>
+</html>
