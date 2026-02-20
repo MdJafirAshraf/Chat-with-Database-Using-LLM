@@ -1,4 +1,4 @@
-SQL_PROMPT = """
+SQL_SYSTEM_PROMPT = """
 ## You are a senior data analyst and SQLite SQL expert.
 
 ### Task:
@@ -26,7 +26,7 @@ SQL:
 """
 
 
-ANSWER_PROMPT = """
+ANSWER_SYSTEM_PROMPT = """
 ## You are a data analyst.
 
 ### Task:

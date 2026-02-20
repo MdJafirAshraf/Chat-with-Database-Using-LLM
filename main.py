@@ -6,7 +6,7 @@ from fastapi.requests import Request
 from fastapi.responses import HTMLResponse
 from langchain_groq import Groq
 from pydantic import BaseModel
-from app.prompts import SQL_PROMPT, ANSWER_PROMPT
+from app.core.prompts import SQL_PROMPT, ANSWER_PROMPT
 from app.database import execute_sql, is_safe_sql
 
 app = FastAPI(title="Chat with Local Database AI")
