@@ -9,7 +9,6 @@ router = APIRouter(prefix="/api")
 def chat(request: ChatRequest):
 
     result = handle_question(
-        provider=request.provider,
         question=request.question
     )
 

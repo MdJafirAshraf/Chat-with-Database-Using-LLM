@@ -12,30 +12,29 @@ def clean_sql(sql: str) -> str:
     return re.sub(r"```sql|```", "", sql).strip()
 
 
-def question_to_sql(provider: str, question: str) -> str:
-    sql = run_prompt(provider, SQL_SYSTEM_PROMPT, question)
+def question_to_sql(question: str) -> str:
+    sql = run_prompt(SQL_SYSTEM_PROMPT, question)
     return clean_sql(sql)
 
 
-def dataframe_to_answer(provider: str, df):
+def dataframe_to_answer(df):
     if df.empty:
         return "No data found."
 
     return run_prompt(
-        provider,
         ANSWER_SYSTEM_PROMPT,
         df.to_string(index=False)
     )
 
 
-def handle_question(provider: str, question: str):
-    sql = question_to_sql(provider, question)
+def handle_question(question: str):
+    sql = question_to_sql(question)
 
     if not is_safe_sql(sql):
         return {"error": "Unsafe SQL detected"}
 
     df = execute_sql(sql)
-    answer = dataframe_to_answer(provider, df)
+    answer = dataframe_to_answer(df)
 
     return {
         "question": question,

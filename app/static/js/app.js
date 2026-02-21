@@ -14,7 +14,7 @@ $(document).ready(function() {
     const $closeError = $('#close-error');
 
     // API Base URL
-    const API_URL = '/chat';
+    const API_URL = '/api/chat';
 
     // Auto-resize textarea
     $questionInput.on('input', function() {
