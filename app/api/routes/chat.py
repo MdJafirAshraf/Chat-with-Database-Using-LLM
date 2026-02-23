@@ -8,9 +8,7 @@ router = APIRouter(prefix="/api")
 @router.post("/chat", response_model=ChatResponse)
 def chat(request: ChatRequest):
 
-    result = handle_question(
-        question=request.question
-    )
+    result = handle_question(question=request.question)
 
     if "error" in result:
         raise HTTPException(status_code=400, detail=result["error"])
