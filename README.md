@@ -13,6 +13,17 @@ cd path\to\Chat-with-Database-Using-LLM
 ```
 
 ### 2. Install dependencies using uv
+If you don’t have **uv** installed, install it first.
+```bash
+pip install uv
+```
+
+Initiate UV:
+```
+uv init
+```
+
+Install the project dependencies:
 ```cmd
 uv pip install -r requirements.txt
 ```
