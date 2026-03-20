@@ -72,9 +72,3 @@ The API will be available at: `http://localhost:8000`
 3. SQL query is validated for safety (prevents DELETE, DROP, UPDATE, etc.)
 4. Query executes against the SQLite database
 5. Results are converted back to human-readable text by the LLM
-
-## Features
-- ✅ Natural language to SQL conversion
-- ✅ SQL injection protection
-- ✅ Local LLM inference (no API calls)
-- ✅ Interactive API documentation
